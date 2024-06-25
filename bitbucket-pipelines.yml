@@ -1,0 +1,20 @@
+image: docker:stable
+
+pipelines:
+  default:
+    - step:
+        name: Deploy Infra
+        script:
+          - git clone https://github.com/Art0ur/INFRA.git
+          - cd INFRA
+          - docker-compose down
+          - docker-compose up -d
+        services:
+          - docker
+        after-script:
+          - if [ $? -eq 0 ]; then echo "Infra Deployment Successful" | mail -s "Infra Deployment Status" 4luth0r@gmail.com; else echo "Infra Deployment Failed" | mail -s "Infra Deployment Status" 4luth0r@gmail.com; fi
+
+definitions:
+  services:
+    docker:
+      memory: 2048
